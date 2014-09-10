@@ -3,9 +3,6 @@
 #define BDT2_TEST_YMD__
 
 
-
-
-//#include "ext_tm.hpp"
 #include <iostream>
 #include "testfrmwk.hpp"
 
