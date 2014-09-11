@@ -30,8 +30,8 @@ namespace boost {
       {}
 
       year_month_day ymd;
-      direction_type direction=Before;
       weekdays       weekday=weekdays::Sun;
+      direction_type direction=Before;
 
       template<typename T>
       T to() const
