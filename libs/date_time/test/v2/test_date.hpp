@@ -39,10 +39,10 @@ namespace boost { namespace date_time2 {
 
 
 
-
-void test_date() 
+void test_min_max_epoch()
 {
-  using namespace boost::date_time2;
+
+ using namespace boost::date_time2;
   using std::cout;
   using std::endl;
 
@@ -53,7 +53,15 @@ void test_date()
     
   }
 
-  try {
+}
+
+void test_basic_construct_except()
+{
+  using namespace boost::date_time2;
+  using std::cout;
+  using std::endl;
+
+ try {
     tm t;
     t.tm_year = 10012;
     date d(t, date::CHECKED);
@@ -92,6 +100,19 @@ void test_date()
     check("convert to tm", t2.tm_year == 113 && t2.tm_mon == 11 && t2.tm_mday == 30);
     
   }
+
+}
+
+void test_date() 
+{
+  test_min_max_epoch();
+  test_basic_construct_except();
+  //todo hoist more parts to sub functions
+
+  using namespace boost::date_time2;
+  using std::cout;
+  using std::endl;
+
 
   {
     date d(2020, 12, 31);
@@ -256,8 +277,20 @@ void test_date()
 
   //end of month
   {
-    date d(2014, Jan, 1);
-    check("end of month", d.end_of_month() == date(2014, Jan, 31)); 
+    date d1(2014, Jan, 1);
+    check("end of month", d1.end_of_month() == date(2014, Jan, 31)); 
+
+    date d2(2000, Feb, 20);
+    check("end of month", d2.end_of_month() == date(2000, Feb, 29)); 
+
+    date d3(2000, Dec, 20);
+    check("end of month", d3.end_of_month() == date(2000, Dec, 31)); 
+
+    date d4(2004, Feb, 20);
+    check("end of month", d4.end_of_month() == date(2004, Feb, 29)); 
+
+    date d5(2014, Dec, 20);
+    check("end of month", d5.end_of_month() == date(2014, Dec, 31)); 
    
   }
 }
