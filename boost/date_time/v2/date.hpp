@@ -390,7 +390,8 @@ namespace boost {
       t.tm_mday= ymd.day_of_month; 
       return t;
     }
-
+    
+    ///Specialization for construction from std::tuple
     template<>
     date::date<std::tuple<int,int,int>>(const std::tuple<int,int,int>& ymd, checking check)
     {
@@ -480,6 +481,14 @@ namespace boost {
     date::date<day_of_year>(const day_of_year& doy) noexcept
     {
       from_ymd(year_month_day(doy.to<year_month_day>())); 
+    }
+
+    ///Specialization to allow conversions to day_of_year eg: 2014-12-31 --> 2014-365
+    template<>
+    day_of_year
+    date::to<day_of_year>() const
+    {
+      return day_of_year(d_.year(), d_.day_of_year());
     }
 
     /// Specialization of days_until for date -- slight efficiency since no Conversion required
