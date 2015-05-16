@@ -147,6 +147,9 @@ namespace boost {
       }
 
       ///throws an exception if date doesn’t validate
+      //constexpr -- todo -- error is constructor does not have empty body
+      //                     see if it's ok as long as only constexpr functions 
+      // called
       date(uint16_t year, uint8_t month, uint8_t day, checking check=CHECKED)
       {
 	from_ymd(year_month_day(year,month,day), check);
