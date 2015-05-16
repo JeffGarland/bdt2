@@ -7,13 +7,73 @@ namespace boost {
   namespace date_time2 {
 
     
+    /** Determine if the give year is a leap year.
+     *@param num_type A number type with % and && operations
+     */
+    template<typename num_type>
+    inline
+    constexpr 
+    bool is_leap_year(num_type year)
+    {
+      //divisible by 4, not if divisible by 100, but true if divisible by 400
+      return (!(year % 4))  && ((year % 100) || (!(year % 400)));
+    }
+
+
+    /** Determine the last day of the month
+     *@param num_type A number type with % and && operations
+     *@param year - The year to get the end of month
+     *@param month - The month to get the end of month
+     */
+    template<typename num_type>
+    //    constexpr -- cannot get g++ to accept this as constexpr function
+    num_type
+    end_of_month_day(num_type year, num_type month)
+    {
+      
+      switch (month) {
+      case 2:
+	if (is_leap_year(year)) {
+	  return 29;
+	} else {
+	  return 28;
+	};
+      case 4:
+      case 6:
+      case 9:
+      case 11:
+	return 30;
+      default:
+	return 31;
+      };
+      
+      //other alternate, but ultimately not compatible constexpr functions
+      //num_type eomd [] = { 31, 28, 31, 30, 31, 30, 31, 30, 31, 31, 30, 31 };
+      //return eomd[month-1];
+
+
+      // num_type ret = 31;
+      // if (month == 2 ) {
+      //  	if (is_leap_year(year)) {
+      //  	  return num_type(29);
+      // 	} else {
+      //  	  return num_type(28);
+      //  	}
+      // }
+      // if (month == 4 || month == 6 || month == 9 || month == 11) {
+      // 	ret = 30;
+      // }
+      // return ret;
+    }
+  
 
 
     /** calculate the month from the year and day in the year taking into account
      *  leap years.  So 2014,1 -> 1; 2004,60 -> 2 (feb 29)
      */
     template<typename num_type>
-    //todo    constexpr 
+    inline
+    //todo    constexpr  -- g++ won't allow...
     num_type month_from_year_and_day(num_type year, num_type day_of_year)
     {
       
@@ -23,7 +83,7 @@ namespace boost {
 	if (day_of_year <= 31) return 1;
 	return 2;
       }
-      bool is_leap =  boost::gregorian::gregorian_calendar::is_leap_year(year);
+      bool is_leap =  is_leap_year(year);
       //DEBUG      std::cout << "TRACE: year " << year << " doy " << day_of_year << std::endl;
 
       
