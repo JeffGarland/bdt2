@@ -10,20 +10,22 @@ namespace boost {
     ///Specify a year and a day eg: 2013 1 == Jan 1, 2013 365 == Dec 31
     struct day_of_year
     {
+      constexpr
       day_of_year(uint16_t y, uint16_t d) noexcept :
 	year(y),
 	day(d)
       {}
       day_of_year() noexcept {}
-      uint16_t year = 10001;
+      uint16_t year = 10001;  //out of range
       uint16_t day  = 367;
 
+      ///Declare signature for specialization
       template<typename T>
-      T to() const
-      {
-	std::cout << "WARNING....undefined ymd conversion called " << std::endl;
-	//static_assert(false, "This signature is here for speciazialition only");
-      }
+      T to() const;
+      // {
+      // 	std::cout << "WARNING....undefined ymd conversion called " << std::endl;
+      // 	//static_assert(false, "This signature is here for speciazialition only");
+      // }
     };
 
 
