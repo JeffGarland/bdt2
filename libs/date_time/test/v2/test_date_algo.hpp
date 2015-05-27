@@ -10,30 +10,34 @@ void test_month_from_year_and_day() {
   using std::cout;
   using std::endl;
   
-  check("month_from_year_and_day - 2014-Jan-1 == 1", 
+  check("algo:month_from_year_and_day - 2014-Jan-1 == 1", 
 	month_from_year_and_day(2014, 1) == 1);
-  check("month_from_year_and_day - 2014-Jan-31 == 1", 
+  check("algo:month_from_year_and_day - 2014-Jan-31 == 1", 
 	month_from_year_and_day(2014, 31) == 1);
-  check("month_from_year_and_day - 2014-Dec-1 == 12", 
+  check("algo:month_from_year_and_day - 2014-Dec-1 == 12", 
 	month_from_year_and_day(2014, 365-30) == 12);
-  check("month_from_year_and_day - 2000-Feb-29 == 29", 
+  check("algo:month_from_year_and_day - 2000-Feb-29 == 29", 
 	month_from_year_and_day(2000, 31+29) == 2);
   
-  check("month_from_year_and_day - 2000-Feb-31 == 29", 
+  check("algo:month_from_year_and_day - 2000-Feb-31 == 29", 
 	month_from_year_and_day(2000, 31+29) == 2);
   
-  check("month_from_year_and_day - 2000-366 == 12", 
+  check("algo:month_from_year_and_day - 2000-366 == 12", 
 	month_from_year_and_day(2000, 366) == 12);
   
-  check("month_from_year_and_day - 2001-365 == 12", 
+  check("algo:month_from_year_and_day - 2001-365 == 12", 
 	month_from_year_and_day(2001, 365) == 12);
   
-  check("month_from_year_and_day - 2002-321 == 11 (nov 17)", 
+  check("algo:month_from_year_and_day - 2002-321 == 11 (nov 17)", 
 	month_from_year_and_day(2002, 321) == 11);
   
-  check("month_from_year_and_day - 1400-31 == 1", 
-	month_from_year_and_day(2002, 321) == 11);
-  
+
+  //force constexpr compilation
+  {
+    constexpr int i = month_from_year_and_day(2002, 321);
+    check("algo:month_from_year_and_day - constexpr - 2002-321 == 11", 
+	  i == 11);
+  }
   
 }
 
@@ -54,6 +58,15 @@ void test_leap_year() {
   check("algo:is_leap_year -5000 is NOT a leap year", !is_leap_year(5000));
   check("algo:is_leap_year -2014 is NOT a leap year", !is_leap_year(2014));
 
+  //force constexpr compilation
+  {
+    constexpr bool b = is_leap_year(1404);
+    check("algo:is_leap_year - constexpr -1404 is a leap year", b == true);
+  }
+  {
+    constexpr bool b = is_leap_year(2014);
+    check("algo:is_leap_year - constexpr -2014 is NOT a leap year", b == false);
+  }
 }
 
 
@@ -88,6 +101,19 @@ void test_end_of_month_day() {
 	end_of_month_day(2000,11) == 30);
   check("algo:end_of_month_day - 31 days in month Dec 2000", 
 	end_of_month_day(2000,12) == 31);
+
+  //force constexpr compilation
+  {
+    constexpr int i = end_of_month_day(1999, 2);
+    check("algo:end_of_month_day - constexpr - 28 days in month Feb 1999", 
+	  i == 28);
+
+  }
+  {
+    constexpr int i = end_of_month_day(2000, 2);
+    check("algo:end_of_month_day - constexpr - 29 days in month Feb 2000", 
+	  i == 29);
+  }
 }
 
 

@@ -1,9 +1,10 @@
 
 //Primary test file -- includes all other tests and calls 
-//As of 2014-Sep-12 129 tests
+//As of 2015-May-26 163 tests
 //use the following command to compile for now and run resulting executable...
-//g++-4.8 -I../../../ -I ~/devtools/boost_1_55_0 -std=c++11 test.cpp
-//g++-4.9 -I../../../../ -I -std=c++14 test.cpp
+//or use the CMakeLists.txt file. Note that g++5 is now required to compile
+//the library due to constexpr enhancements
+//g++-5 -I../../../../ -I -std=c++14 test.cpp
 
 #include "test_date.hpp"
 #include "test_year_month_day.hpp"
