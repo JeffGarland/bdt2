@@ -1,19 +1,16 @@
-#ifndef BDT2_DATE_HPP
-#define BDT2_DATE_HPP
+#ifndef BDT2_DATE_HPP_
+#define BDT2_DATE_HPP_
 
-#include <ctime>
-#include <cstdlib> //for int32_t
-#include <stdexcept>
-#include <string>
-#include <sstream>
+#include "durations.hpp" //types for days and weeks
 #include "year_month_day.hpp"
 #include "day_of_year.hpp"
 #include "closest_day_of_week.hpp"
 #include "day_of_week.hpp"
-#include "iso_year_month_day.hpp"
 #include "iso_week_number.hpp"
-#include <chrono>
-#include <boost/date_time.hpp>
+#include <ctime>
+#include <stdexcept>
+#include <string>
+#include <sstream>
 
 namespace boost { 
   namespace date_time2 {
@@ -48,15 +45,6 @@ namespace boost {
 
     };
     
-    
-    //todo eventual design
-    // typedef std::ratio<86400,1> day_ratio;
-    // typedef std::chrono::duration<int32_t, day_ratio> days;
-    // typedef std::ratio<86400*7,1> week_ratio;
-    // typedef std::chrono::duration<int32_t, week_ratio> weeks;
-    //temporary hack using exiting bdt v1 types
-    using boost::gregorian::days;
-    using boost::gregorian::weeks;
 
     template<class calendar>
     class date_base : public calendar
@@ -71,9 +59,7 @@ namespace boost {
     struct no_formatter {};
 
     class date_facet 
-    {
-
-    };
+    {};
 
     class date : public date_base<gregorian_calendar>
     {
@@ -168,7 +154,6 @@ namespace boost {
       date(const year_month_day& ymd, checking check)
       {
 	from_ymd(ymd, check);
-	//    std::cout << "ymd constructor: " << ymd << std::endl;
       }
   
       // a flexible string conversion method
@@ -188,7 +173,8 @@ namespace boost {
       to_string() const
       {
 	std::ostringstream ss;
-	ss.imbue(std::locale(ss.getloc(), new boost::gregorian::date_facet("%Y %m %d")));
+	ss.imbue(std::locale(ss.getloc(), 
+			     new boost::gregorian::date_facet("%Y %m %d")));
 	ss << d_;
 	return ss.str();
       }
@@ -207,21 +193,13 @@ namespace boost {
        *  things like string conversions which have flexible formats
        */
       template<typename T, typename Format>
-      T to(const Format& format) const
-      {
-	std::cout << "WARNING....undefined date conversion called " << std::endl;
-	//static_assert(false, "This signature is here for speciazialition only");
-      }
+      T to(const Format& format) const;
 
       /** Templated conversion function -- specilize an implementation
        *  for a new type to facilitate conversions
        */
       template<typename T>
-      T to() const
-      {
-	std::cout << "WARNING....undefined date conversion called " << std::endl;
-	//static_assert(false, "This signature is here for speciazialition only");
-      }
+      T to() const;
 
       /** Templated constructor which can be overridden to provide new and unique
        *  ways to construct a date custom to a program or project.  Most standard
@@ -268,7 +246,7 @@ namespace boost {
       date operator+(const days& rhs) const;
       date operator-(const weeks& rhs) const;
       date operator+(const weeks& rhs) const;
-      days operator-(const date& rhs) const { return d_ - rhs.d_; }
+      days operator-(const date& rhs) const;
 
       /// increment / decrement operators
       date& operator--() { d_ = d_ - boost::gregorian::days(1); return *this; }
@@ -286,7 +264,7 @@ namespace boost {
       {
 	date target(d);
 	//DEBUG std::cout << "date: " << d_ << " target: " << target.qd_ << " days: " << (target.d_ - d_) << std::endl;
-	return target.d_ - d_;
+	return days(target.d_.day_count().as_number() - d_.day_count().as_number());
       }
       
 
@@ -296,15 +274,8 @@ namespace boost {
       {
 	date target(d);
 	//DEBUG std::cout << "date: " << d_ << " target: " << target.qd_ << " days: " << (target.d_ - d_) << std::endl;
-	return d_ - target.d_;
+	return days(d_.day_count().as_number() - target.d_.day_count().as_number());
       }
-      //todo interface
-      //      days days_before(weekdays weekday) const;
-      // do this with operator- ?
-      //      days days_before(date d) const;
-      // this or a template?
-      //      days days_until(year_month_day ymd) const;
-      //      days days_before(year_month_day ymd) const;
 
       /// Calculate the date of next given weekday
       date next(weekdays wd) const;
@@ -312,10 +283,11 @@ namespace boost {
 
       date end_of_month() const;
 
-      boost::gregorian::date d_; //temp implementation
+      boost::gregorian::date d_; //todo - temp implementation
     };
 
-    std::ostream& operator<<(std::ostream& os, const date& d)
+    std::ostream&
+    operator<<(std::ostream& os, const date& d)
     {
       os << d.to_year_month_day();
       return os;
@@ -341,17 +313,11 @@ namespace boost {
     }
 
 
-    /** Templated conversion function -- specilize an implementation
-     *  for a new type and format to facilitate conversions. This variation
-     *  supports the passing of a formatting object to provide for
-     *  things like string conversions which have flexible formats
-     *
-     * todo -- still unsure if this belongs here or the i/o goes in 
-     *         the auxilary types
+    /** String conversion supporting iso format specifications
      */
     template<>
     std::string
-    date::to<std::string, iso_year_month_day::ISO_FORMAT>(const iso_year_month_day::ISO_FORMAT& format) const
+    date::to<std::string, iso_formats>(const iso_formats& format) const
     {
       year_month_day ymd(this->to_year_month_day());
       std::string year(std::to_string(ymd.year));
@@ -360,7 +326,7 @@ namespace boost {
       month += std::to_string(ymd.month);
       if (ymd.day_of_month < 10) { day = '0'; }
       day += std::to_string(ymd.day_of_month);
-      if (format == iso_year_month_day::ISO_NORMAL) {
+      if (format == iso_formats::normal) {
 	return year+month+day;
       }
       //extended form
@@ -382,6 +348,7 @@ namespace boost {
     //   from_ymd(year_month_day(theTM), check); //implicit year_month_day construction
     // }
 
+    ///Specialization for construction from std::tm
     template<>
     std::tm
     date::to<std::tm>() const
@@ -415,8 +382,7 @@ namespace boost {
     template<>
     date::date<std::chrono::system_clock::time_point>(const std::chrono::system_clock::time_point& tp) noexcept
     {
-      using namespace std::chrono;
-      std::time_t tt = system_clock::to_time_t(tp);
+      std::time_t tt = std::chrono::system_clock::to_time_t(tp);
       from_time_t(tt);
     }
 
@@ -427,38 +393,6 @@ namespace boost {
       //todo fix me..
     }
 
-    ///Specialization to allow conversions from boost date time v1 gregorian::date
-    template<>
-    date::date<boost::gregorian::date>(const boost::gregorian::date& bd, checking check)
-    {
-      d_ = bd;
-    }
-
-
-    ///Specialization to allow conversions to boost date time v1 gregorian::date
-    template<>
-    boost::gregorian::date
-    date::to<boost::gregorian::date>() const
-    {
-      return d_;
-    }
-
-
-    ///Specialization to allow conversions from boost date_time  v1 posix_time::ptime
-    template<>
-    date::date<boost::posix_time::ptime>(const boost::posix_time::ptime& t) noexcept
-    {
-      d_ = t.date(); //todo fix the check -- what to do with nadt values from v1?
-    }
-
-
-    ///Specialization to allow conversions to boost date_time v1 posix_time::ptime
-    template<>
-    boost::posix_time::ptime
-    date::to<boost::posix_time::ptime>() const
-    {
-      return boost::posix_time::ptime(d_);
-    }
 
     /// Specialization to construct from a day of week spec eg: First Tue in Jan 2014
     template<>
@@ -499,7 +433,7 @@ namespace boost {
     days 
     date::days_until<date>(const date& target) const
     {
-      return target.d_ - d_;
+      return days(target.d_.day_count().as_number() - d_.day_count().as_number());
     }
 
     ///Specialization of days_until for weekdays so you can write d.day_until(Sun);
@@ -518,7 +452,7 @@ namespace boost {
     days 
     date::days_before<date>(const date& target) const
     {
-      return d_ - target.d_;
+      return days(d_.day_count().as_number() - target.d_.day_count().as_number());
     }
     /// Specialization of days_before for weekdays so you can write d.day_before(Sun);
     template<>
@@ -536,7 +470,7 @@ namespace boost {
     date 
     date::operator-(const weeks& rhs) const
     {
-      return date(d_ - rhs); 
+      return date(d_ - boost::gregorian::weeks(rhs.count())); 
     }
 
     /// Arithmetic addition operation with weeks duration type
@@ -544,7 +478,16 @@ namespace boost {
     date 
     date::operator+(const weeks& rhs) const
     {
-      return date(d_ + rhs); 
+      return date(d_ + boost::gregorian::weeks(rhs.count())); 
+    }
+
+    //todo rm - prior to chrono...
+    //      days operator-(const date& rhs) const { return d_ - rhs.d_; }
+
+    days 
+    date::operator-(const date& rhs) const 
+    { 
+      return days(d_.day_count().as_number() - rhs.d_.day_count().as_number());
     }
 
     /// Arithmetic subtraction operation with days duration type
@@ -552,7 +495,7 @@ namespace boost {
     date 
     date::operator-(const days& rhs) const 
     { 
-      return date(d_ - rhs); 
+      return date(d_ - boost::gregorian::days(rhs.count())); 
     }
     
     /// Arithmetic addition operation with days duration type
@@ -560,7 +503,7 @@ namespace boost {
     date 
     date::operator+(const days& rhs) const 
     { 
-      return date(d_ + rhs); 
+      return date(d_ + boost::gregorian::days(rhs.count())); 
     }
 
     /// Calculate the date of next given weekday eg: next Thu

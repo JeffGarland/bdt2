@@ -14,6 +14,7 @@
 #include "test_iso_week_number.hpp"
 #include "test_nanotime.hpp"
 #include "test_date_algo.hpp"
+#include "test_durations.hpp"
 
 #include <iostream>
 #include "testfrmwk.hpp"
@@ -29,6 +30,7 @@ int main()
   test_iso_week_number();
   test_nanotime();
   test_date_algo();
+  test_durations();
 
   TestStats::instance().print();
   return TestStats::instance().failcount();

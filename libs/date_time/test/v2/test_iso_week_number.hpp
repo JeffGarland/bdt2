@@ -20,7 +20,7 @@ void test_iso_week_number() {
   {
     boost::gregorian::date d(2014,1,1);
     cout << "Week Number for 1/1/2014 -> " << d.week_number() << endl;
-    d += days(7);
+    d += boost::gregorian::days(7);
     cout << "Week Number for 1/8/2014 -> " << d.week_number() << endl;
   }
   {

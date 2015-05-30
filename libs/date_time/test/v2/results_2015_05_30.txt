@@ -1,0 +1,208 @@
+Pass :: ymd:constexpr default constructor 
+Pass :: ymd:constexpr integer constructor 
+Pass :: ymd:split string constructor 
+ymd split string 2014-10-02
+Pass :: ymd:string constructor 
+ymd string 2004-10-01
+Pass :: ymd:string constructor 2 
+Pass :: ymd:string constructor 3 
+Pass :: ymd:string constructor 4 
+Pass :: ymd:string constructor 5 - mdy order 
+Pass :: ymd:string constructor 6 - dmy order 
+Pass :: ymd:int constructor 
+ymd int 2010-10-01
+ISO string 2014-04-01
+Pass :: ymd: iso year_month_day constructor 
+YMD: ISO string 2 2014-04-01
+Pass :: ymd: iso year_month_day constructor 
+YMD: ISO string 3 2014-04-01
+Pass :: ymd: iso year_month_day constructor 
+Pass :: ymd: iso year_month_day constructor - conversion 
+Pass :: ymd: iso year_month_day constructor - conversion 
+Pass :: ymd: iso year_month_day constructor - conversion 
+Pass :: boost date conversion from ymd 
+Pass :: max date 
+Pass :: min date 
+Pass :: epoch date 
+Pass :: ymd checker for bad year except text is: year is out of range 1400...10000: 11912 
+Pass :: ymd checker for bad month except text is: month is out of range 1...12: 14 
+Pass :: ymd checker for bad day except text is: day is out of range 1...31: 32 
+Pass :: check good construction from tm 
+Pass :: convert to tm 
+Pass :: date: check to_string 2020 12 31 
+Pass :: date: check to<std::string>  
+Pass :: date: date copy constructor  
+to ymd: 1970 01 01
+Pass :: date: check to_year_month_day 1970 01 01 
+Pass :: date: check to<year_month_day>  
+tuple1900-01-01
+Pass :: date: check tuple date construction via ymd 
+Pass :: date: check tuple date construction  
+Pass :: date: check tuple conversion  
+Pass :: date: check tuple conversion2  
+day clock: 2015-May-30
+chrono based date is: 2015-05-30
+Pass :: date: check construction from chrono timepoint  
+Pass :: date: check boost date construction  
+Pass :: date: check boost date conversion  
+Pass :: date: check boost ptime construction  
+Pass :: date: check boost ptime conversion  
+Pass :: date: days_until with date  
+Pass :: date: days_until with year_month_day  
+Pass :: date: days_until with gregorian::date  
+Pass :: date: days_until day_of_week  
+Pass :: date: days_until weekday   
+Pass :: date: days_until weekday   
+Pass :: date: days_until weekday   
+Pass :: date: next weekday   
+Pass :: days before 1  
+Pass :: previous  
+Pass :: date: test subtraction positive  
+Pass :: date: test subtraction negative 
+Pass :: date: test addition of days 
+Pass :: date: test subtraction of days 
+Pass :: date: test addition of weeks 
+Pass :: date: test addition of weeks 
+Pass :: date: test subtraction of weeks 
+Pass :: date: test addition of weeks and days 
+Pass :: date: test addition of weeks 
+Pass :: prefix and postfix-- 
+Pass :: prefix and postfix++ 
+date: iterate: 2014-04-01
+date: iterate: 2014-04-02
+date: iterate: 2014-04-03
+date: iterate: 2014-04-04
+date: iterate: 2014-04-05
+date: iterate: 2014-04-06
+date: iterate: 2014-04-07
+Pass :: date: iteration 
+Pass :: date: map emplace - move construct 
+Pass :: date: test of user extension 
+ISO NORMAL: 20140401
+Pass :: date: iso normal string conversion 
+Pass :: date: iso extended string conversion 
+Pass :: date: end of month 1 
+Pass :: date: end of month 2 
+Pass :: date: end of month 3 
+Pass :: date: end of month 4 
+Pass :: date: end of month 5 
+Pass :: closest date of week - sunday before 
+Pass :: closest date of week - sunday after 
+cd2: 2013-05-19
+Pass :: closest date of week - monday before - month boundary 
+Pass :: closest date of week - monday nearest 4/1 
+Pass :: closest date of week - monday nearest 4/2 
+Pass :: closest date of week - monday nearest 4/3 
+Pass :: closest date of week - monday nearest 4/4 
+Pass :: closest date of week - monday nearest 4/5 
+Pass :: closest date of week - monday nearest 4/7 
+Pass :: closest date of week - monday before - year boundary 
+dow1: 2013-11-28
+Pass :: day of week: thx giving 2013 Last Thu in Nov 
+Pass :: day of week: First Sunday in Feb 2002 
+Pass :: day of week: memorial day 2013 Last Mon in May 
+Pass :: day of week: first tue in Jan 2013 
+Pass :: day of week: second tue in Jan 2013 
+Pass :: day of week: third tue in Jan 2013 
+Pass :: day of week: forth tue in Jan 2013 
+Pass :: day of week: fifth tue in Jan 2013 
+Pass :: day of year - Jan 1 
+Pass :: day of year - Jan 1 - roundtrip 
+Pass :: day of year - Jan 31 
+Pass :: day of year - Jan 31 - roundtrip 
+Pass :: day of year - Jan 31 - leap 
+Pass :: day of year - Jan 31 - roundtrip - leap 
+Pass :: day of year - Feb 1 
+Pass :: day of year - Feb 1 - roundtrip 
+Pass :: day of year - Feb 28 - no leap 
+Pass :: day of year - Feb 28 - no leap - roundtrip 
+Pass :: day of year - Feb 29 - leap 
+Pass :: day of year - Feb 28 - leap 
+Pass :: day of year - Mar 1 - no leap 
+Pass :: day of year - Mar 31 - no leap 
+Pass :: day of year - Mar 31 - leap 
+Pass :: day of year - Apr 1 - no leap 
+Pass :: day of year - Apr 30 - no leap 
+Pass :: day of year - May 1 - no leap 
+Pass :: day of year - May 31 - no leap 
+Pass :: day of year - Jun 1 - no leap 
+Pass :: day of year - Jun 30 - no leap 
+Pass :: day of year - Jul 1 - no leap 
+Pass :: day of year - Jul 31 - no leap 
+Pass :: day of year - Aug 1 - no leap 
+Pass :: day of year - Aug 31 - no leap 
+Pass :: day of year - Sep 1 - no leap 
+Pass :: day of year - Sep 31 - no leap 
+Pass :: day of year - Oct 1 - no leap 
+Pass :: day of year - Oct 31 - no leap 
+Pass :: day of year - Nov 1 - no leap 
+Pass :: day of year - Nov 30 - no leap 
+Pass :: day of year - Dec 1 - no leap 
+Pass :: day of year - Dec 30 - no leap 
+Pass :: day of year - Dec 31 - leap 
+Week Number for 1/1/2014 -> 1
+Week Number for 1/8/2014 -> 2
+Pass :: week number default construct - year 
+Pass :: week number default construct - week number 
+Pass :: week number default construct - weekday  
+Pass :: week number string construct - year 
+Pass :: week number string construct - week number 
+Pass :: week number string construct - weekday  
+Pass :: week number char construct - year 
+Pass :: week number char construct - week number 
+Pass :: week number char construct - weekday  
+DEBUG: offset: 5
+Week doy: 2014-01-03
+Week: 2014-01-03
+Pass :: time_t conversion of 0 
+Pass :: algo:is_leap_year -1404 is a leap year 
+Pass :: algo:is_leap_year -2000 is a leap year 
+Pass :: algo:is_leap_year -2004 is a leap year 
+Pass :: algo:is_leap_year -2400 is a leap year 
+Pass :: algo:is_leap_year -4000 is a leap year 
+Pass :: algo:is_leap_year -1400 is NOT a leap year 
+Pass :: algo:is_leap_year -1900 is NOT a leap year 
+Pass :: algo:is_leap_year -2100 is NOT a leap year 
+Pass :: algo:is_leap_year -1999 is NOT a leap year 
+Pass :: algo:is_leap_year -5000 is NOT a leap year 
+Pass :: algo:is_leap_year -2014 is NOT a leap year 
+Pass :: algo:is_leap_year - constexpr -1404 is a leap year 
+Pass :: algo:is_leap_year - constexpr -2014 is NOT a leap year 
+Pass :: algo:end_of_month_day - 31 days in month Jan 2000 
+Pass :: algo:end_of_month_day - 29 days in month Feb 2000 
+Pass :: algo:end_of_month_day - 28 days in month Feb 1999 
+Pass :: algo:end_of_month_day - 28 days in month Feb 2001 
+Pass :: algo:end_of_month_day - 31 days in month Mar 2000 
+Pass :: algo:end_of_month_day - 30 days in month Apr 2000 
+Pass :: algo:end_of_month_day - 31 days in month May 2000 
+Pass :: algo:end_of_month_day - 30 days in month Jun 2000 
+Pass :: algo:end_of_month_day - 31 days in month Jul 2000 
+Pass :: algo:end_of_month_day - 31 days in month Aug 2000 
+Pass :: algo:end_of_month_day - 30 days in month Sep 2000 
+Pass :: algo:end_of_month_day - 31 days in month Oct 2000 
+Pass :: algo:end_of_month_day - 30 days in month Nov 2000 
+Pass :: algo:end_of_month_day - 31 days in month Dec 2000 
+Pass :: algo:end_of_month_day - constexpr - 28 days in month Feb 1999 
+Pass :: algo:end_of_month_day - constexpr - 29 days in month Feb 2000 
+Pass :: algo:month_from_year_and_day - 2014-Jan-1 == 1 
+Pass :: algo:month_from_year_and_day - 2014-Jan-31 == 1 
+Pass :: algo:month_from_year_and_day - 2014-Dec-1 == 12 
+Pass :: algo:month_from_year_and_day - 2000-Feb-29 == 29 
+Pass :: algo:month_from_year_and_day - 2000-Feb-31 == 29 
+Pass :: algo:month_from_year_and_day - 2000-366 == 12 
+Pass :: algo:month_from_year_and_day - 2001-365 == 12 
+Pass :: algo:month_from_year_and_day - 2002-321 == 11 (nov 17) 
+Pass :: algo:month_from_year_and_day - constexpr - 2002-321 == 11 
+Pass :: duration: days constructor 
+Pass :: duration: days adding  
+Pass :: duration: subtraction 
+Pass :: duration: mixed adding subtract 
+Pass :: duration: days compare 
+Pass :: duration: weeks constructor 
+Pass :: duration: weeks adding  
+Pass :: duration: subtraction 
+Pass :: duration: mixed adding subtract 
+Pass :: duration: weeks compare 
+Pass :: duration: days + weeks 
+181 Tests Executed: All Succeeded
+
