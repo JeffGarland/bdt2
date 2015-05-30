@@ -6,9 +6,8 @@
 //the library due to constexpr enhancements
 //g++-5 -I../../../../ -I -std=c++14 test.cpp
 
-#include "test_date.hpp"
 #include "test_year_month_day.hpp"
-#include "test_iso_year_month_day.hpp"
+#include "test_date.hpp"
 #include "test_closest_day.hpp"
 #include "test_day_of_week.hpp"
 #include "test_day_of_year.hpp"
@@ -28,7 +27,6 @@ int main()
   test_day_of_week();
   test_day_of_year();
   test_iso_week_number();
-  test_iso_year_month_day();
   test_nanotime();
   test_date_algo();
 

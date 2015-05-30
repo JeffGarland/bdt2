@@ -24,6 +24,9 @@ namespace boost {
 	                       ymd_order_us};  ///<order is month-day-year
 
 
+    /// For formatting dates and times into iso format
+    enum class iso_formats { normal, extended };
+
     //rejected approach...
     // template<typename CharT>
     // struct gregorian_month_names_struct
