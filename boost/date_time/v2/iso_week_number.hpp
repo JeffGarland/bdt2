@@ -24,9 +24,9 @@ namespace boost {
      *  first week of a year may be in the prior year.  So, for example
      *  2004-W53-6 is 2005-01-01 and 2008-W1-01 is 2007-12-31.
      *
-     *  Some notes about iso week numbers.  The weeks start on Monday. 
-     *  The first week of the year contains the first thursday of the 
-     *  year which guarantees that Jan 4 is in the first iso week of 
+     *  Some notes about iso week numbers.  The weeks start on Monday.
+     *  The first week of the year contains the first thursday of the
+     *  year which guarantees that Jan 4 is in the first iso week of
      *  the year.
      */
     struct iso_week_number 
@@ -65,8 +65,8 @@ namespace boost {
        * @param wn The week number 1..53 prepended by W (ex: W01, W21, W53)
        * @param dow The day in the week 1..7 where 1==Monday, 2==Tuesday, ...7==Sunday
        */
-      iso_week_number(const char* const y, 
-		      const char* const wn, 
+      iso_week_number(const char* const y,
+		      const char* const wn,
 		      const char* const dow) :
        	iso_week_number(std::atoi(y), std::atoi(wn+1), std::atoi(dow))
       {}
