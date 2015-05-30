@@ -1,5 +1,5 @@
-#ifndef BDT2_YEAR_MONTH_DAY_HPP
-#define BDT2_YEAR_MONTH_DAY_HPP
+#ifndef BDT2_YEAR_MONTH_DAY_HPP_
+#define BDT2_YEAR_MONTH_DAY_HPP_
 
 #include <ctime>
 #include <cstdlib> //for int32_t
@@ -16,6 +16,25 @@ namespace algo = boost::algorithm;
 
 namespace boost { 
   namespace date_time2 {
+
+
+    /// Ordering for string constructors
+    // add an 'unknown/detect' version?  so that an arbitrary
+    // string can be handled? There's still a problem b/c you
+    // won't know how to handle a case like 2014-01-01 <- which is month?
+    //todo look in basic_defs and get rid of ymd_order_spec...or not
+    enum class 
+    date_order { ymd //< iso ordering 
+	       , mdy //< american order
+	       , dmy //< european order
+    };
+    
+    /// Format specifications for string constructors
+    /// todo -- maybe an actual struct here with
+    ///         a specified delimiter that can be passed into
+    ///         the function
+    enum class date_format { iso, delimited };
+
 
     /** Helper to provide construction and output of date types from various
      *  year-month-day representations.
@@ -38,15 +57,6 @@ namespace boost {
 	day_of_month(d) 
       {}
 
-      // ///This constructor allows expression of dates like 1st Sunday after 1/1/2010
-      // ///or Nearest Sunday to 1/1/2010.
-      // year_month_day(uint16_t y, uint8_t m, uint8_t d, weekdays wd, direction_type p) 
-      // {
-      // 	//todo write the code here
-      // 	//todo -- is this really the best way?  shouldn't there be a struct
-      // 	//        like the day_of_week form so that we can do i/o?
-      // }
-
       //todo -- handy, but dangerous...what if month is actually a string...
       year_month_day(const char* const y,
 		     const char* const m,
@@ -65,21 +75,85 @@ namespace boost {
 	day_of_month(static_cast<uint8_t>(d)) 
       {} //todo should cause error
 
-      enum class date_order { ymd, mdy, dmy };
 
-
-      template<date_order=date_order::ymd>
-      static
+      /** Parses ymd elements from const char* - assumes
+       *  year is 4 chars (2014) and month/day are 2 chars
+       *  if string is less then 10 chars for delimited or 8 chars
+       *  for non-delimited resulting year_month_day values are bogus
+       *  Tolerates a variety of delimeters (todo allow specification?) 
+       *  Makes a copy of the string (todo avoid this)
+       *  
+       * todo...if not specializeing this tmpl then this doesn't
+       *        need to be templatized...
+       */
+      template<date_order=date_order::ymd, date_format=date_format::delimited>
+      static //todo constexper, noexcept?
       year_month_day
-      parse_date(const char* const ymd_string, date_order)
+      parse_date(const char* const ymd_string, 
+		 date_order  order,
+		 date_format fmt)
       {
 	std::string ymd(ymd_string);
-	algo::replace_all(ymd, "/", " ");
-	algo::replace_all(ymd, "-", " ");
-	return year_month_day(std::atoi(ymd.c_str()),
-			      std::atoi(ymd.c_str()+5),
-			      std::atoi(ymd.c_str()+8));
+	if (fmt==date_format::delimited) {
+	  if (ymd.length() < 10) return year_month_day{};
+	  algo::replace_all(ymd, "/", " ");
+	  algo::replace_all(ymd, "-", " ");
+	  if (order == date_order::ymd) {
+	    return year_month_day(std::atoi(ymd.c_str()),
+				  std::atoi(ymd.c_str()+5),
+				  std::atoi(ymd.c_str()+8));
+	  }
+	  else if (order == date_order::mdy) {
+	    return year_month_day(std::atoi(ymd.c_str()+6),
+				  std::atoi(ymd.c_str()),
+				  std::atoi(ymd.c_str()+3));
+	    
+	  }
+	  //day-month-year 15-12-2014
+	  return year_month_day(std::atoi(ymd.c_str()+6),
+				std::atoi(ymd.c_str()+3),
+				std::atoi(ymd.c_str()));
+	}
+	//else { //not delimited, aka iso
+	if (ymd.length() < 8) return year_month_day{};
+
+	return year_month_day(std::atoi(ymd.substr(0,4).c_str()),
+			      std::atoi(ymd.substr(4,2).c_str()),
+			      std::atoi(ymd.substr(6,2).c_str()));
+
       }
+
+      //todo experiment, not working!
+      // template<date_order=date_order::ymd>
+      // static
+      // year_month_day
+      // parse_date(const char* const ymd_string, date_order);
+
+      // template<>
+      // static
+      // year_month_day
+      // parse_date<date_order::ymd>(const char* const ymd_string, date_order)
+      // {
+      // 	std::string ymd(ymd_string);
+      // 	algo::replace_all(ymd, "/", " ");
+      // 	algo::replace_all(ymd, "-", " ");
+      // 	return year_month_day(std::atoi(ymd.c_str()),
+      // 			      std::atoi(ymd.c_str()+5),
+      // 			      std::atoi(ymd.c_str()+8));
+      // }
+
+      // template<>
+      // static
+      // year_month_day
+      // parse_date<date_order::mdy>(const char* const ymd_string, date_order)
+      // {
+      // 	std::string ymd(ymd_string);
+      // 	algo::replace_all(ymd, "/", " ");
+      // 	algo::replace_all(ymd, "-", " ");
+      // 	return year_month_day(std::atoi(ymd.c_str()+6),
+      // 			      std::atoi(ymd.c_str()),
+      // 			      std::atoi(ymd.c_str()+3));
+      // }
 
       // template<>
       // static
@@ -97,11 +171,22 @@ namespace boost {
 
       // todo -- shouldn't we have an ordering and delimiter version
       /// Construct from a string of the form YYYY-MM-DD or YYYY/MM/DD
-      template<date_order = date_order::ymd>
+      template<date_order  dto = date_order::ymd, 
+	       date_format dtf = date_format::delimited>
       year_month_day(const char* const ymd_string, 
-		     date_order order=date_order::ymd) 
+		     date_order  order=dto,
+		     date_format fmt=dtf) 
       {
-	*this = parse_date(ymd_string, order);
+	*this = parse_date(ymd_string, order, fmt);
+      }
+
+      template<date_order  dto = date_order::ymd, 
+	       date_format dtf = date_format::delimited>
+      year_month_day(const std::string ymd_string, 
+		     date_order  order=dto,
+		     date_format fmt=dtf) 
+      {
+	*this = parse_date(ymd_string.c_str(), order, fmt);
       }
 
       template<typename T>
@@ -165,7 +250,7 @@ namespace boost {
       day_of_month = tm.tm_mday;
     } 
 
-    ///Specialization to convert from a std::tuple<int,int,int> in y/m/d order
+    ///Specialization to convert from a std::tuple<int,int,int> in y/m/d fmt
     template<>
     year_month_day::year_month_day(const std::tuple<int, int, int>& ymd)
     {
@@ -174,7 +259,8 @@ namespace boost {
       day_of_month = std::get<2>(ymd);
     } 
 
-    ///Specialization to convert from a boost::gregorian::date
+    ///Specialization to convert from a gregorian::date to year_month_day
+    //todo - should be moved once v1 impl is removed
     template<>
     year_month_day::year_month_day(const boost::gregorian::date& d)
     {
@@ -184,13 +270,13 @@ namespace boost {
       day_of_month = ymd.day;
     } 
 
+    ///Specialiation to convert year_month_day to v1 gregorian::date
     template<>
     boost::gregorian::date
     year_month_day::to() const
     {
       return boost::gregorian::date(year, month, day_of_month);
     }
-
 
     //  http://akrzemi1.wordpress.com/2012/10/29/user-defined-literals-part-iii/
     //N2750 recommendation to prevent clash
