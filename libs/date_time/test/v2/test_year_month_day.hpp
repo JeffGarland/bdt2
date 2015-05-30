@@ -10,7 +10,7 @@
 
 
 
-void test_iso_year_month_day_2() 
+void test_iso_year_month_day() 
 {
   using namespace boost::date_time2;
   using std::cout;
@@ -176,7 +176,7 @@ void test_year_month_day_conversions()
 void test_year_month_day() 
 {
   test_year_month_day_basic();
-  test_iso_year_month_day_2();
+  test_iso_year_month_day();
   test_year_month_day_conversions();
 }
 
