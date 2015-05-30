@@ -174,8 +174,8 @@ namespace boost {
       template<date_order  dto = date_order::ymd, 
 	       date_format dtf = date_format::delimited>
       year_month_day(const char* const ymd_string, 
-		     date_order  order=dto,
-		     date_format fmt=dtf) 
+		     date_format fmt=dtf,
+		     date_order  order=dto)
       {
 	*this = parse_date(ymd_string, order, fmt);
       }
@@ -183,8 +183,8 @@ namespace boost {
       template<date_order  dto = date_order::ymd, 
 	       date_format dtf = date_format::delimited>
       year_month_day(const std::string ymd_string, 
-		     date_order  order=dto,
-		     date_format fmt=dtf) 
+		     date_format fmt=dtf,
+		     date_order  order=dto)
       {
 	*this = parse_date(ymd_string.c_str(), order, fmt);
       }

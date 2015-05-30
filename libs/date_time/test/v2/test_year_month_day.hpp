@@ -18,7 +18,7 @@ void test_iso_year_month_day()
 
   {
     
-    year_month_day id("20140401", date_order::ymd, date_format::iso);
+    year_month_day id("20140401", date_format::iso);
     cout << "ISO string " << id << endl;;
     check("ymd: iso year_month_day constructor", 
 	  id.year == 2014 && id.month == 4 && id.day_of_month == 1);
@@ -52,7 +52,7 @@ void test_iso_year_month_day()
   {
     
     check("ymd: iso year_month_day constructor - conversion", 
-  	  date(year_month_day("20140401T000000", date_order::ymd, date_format::iso)) == date(2014,4,1));
+  	  date(year_month_day("20140401T000000", date_format::iso)) == date(2014,4,1));
     
   }
 
@@ -128,7 +128,7 @@ void test_year_month_day_basic()
 
   {
     std::string s("01-13-2004");
-    year_month_day ymd(s, date_order::mdy);
+    year_month_day ymd(s, date_format::delimited, date_order::mdy);
     check("ymd:string constructor 5 - mdy order", 
 	  ymd.year == 2004 && ymd.month == 1 && ymd.day_of_month == 13);
 
@@ -136,7 +136,7 @@ void test_year_month_day_basic()
 
   {
     std::string s("13-01-2004");
-    year_month_day ymd(s, date_order::dmy);
+    year_month_day ymd(s, date_format::delimited, date_order::dmy);
     check("ymd:string constructor 6 - dmy order", 
 	  ymd.year == 2004 && ymd.month == 1 && ymd.day_of_month == 13);
 
