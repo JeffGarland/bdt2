@@ -24,6 +24,9 @@ namespace boost {
     namespace {
       constexpr
       int eomd [] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
+      // last day of month in leap year
+
     }
     /** Determine the last day of the month
      * This function will be compile time only if used with constexpr
@@ -108,7 +111,66 @@ namespace boost {
     }
 
 
+    /** Calculate the month and day_of_month using the year and
+     *  day of year taking into account leap years.
+     *  So 2014,1 -> 1,1; 2004,60 -> 2,29 (feb 29)
+     */
+    template<typename num_type>
+    inline
+    constexpr  //requires g++-5 and above
+    std::pair<num_type, num_type>
+    month_and_day_from_year_doy(num_type year, num_type day_of_year)
+    {
+      typedef std::pair<num_type, num_type> npair;
 
+      //quick return on error
+      if (day_of_year > 366) return std::pair<num_type, num_type>(0,0);
+
+      //simple case of january -- immediately return
+      if (day_of_year <= 31) return npair(1, day_of_year);
+
+      constexpr int
+	ldom_leap [] = { 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335, 366 };
+      //last day of month in normal year
+      constexpr int
+	ldom      [] = { 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334, 365 };
+
+      bool is_leap =  is_leap_year(year);
+
+      //calculate the approximate location in the month array
+      //it will either be right on or one below -- subtract
+      //one for zero indexed array.  Also works because
+      //avoiding all less than 31...so this will always be
+      //greater than 1
+      short idx = (day_of_year/29) - 1;
+      // std::cout << "algo: idx " << idx
+      // 		<< " day_of_year " << day_of_year ;
+
+      if (is_leap) {
+	if (ldom_leap[idx] >= day_of_year) { //traverse back
+	  idx--;
+	}
+	// std::cout << " idx2 " << idx
+	// 	  << " ldom_leap[idx]  " << ldom_leap[idx]
+	// 	  << std::endl;
+	if (idx == 11) {
+	  return npair(idx+1, day_of_year-ldom_leap[idx]);
+	}
+	return npair(idx+2, day_of_year-ldom_leap[idx]);
+      }
+
+      //regular year
+      if (ldom[idx] >= day_of_year) { //traverse back
+	idx--;
+      }
+      // std::cout << " idx2 " << idx
+      // 		<< " ldom[idx]  " << ldom[idx]
+      // 		<< std::endl;
+      if (idx == 11) {
+	return npair(idx+1, day_of_year-ldom[idx]);
+      }
+      return npair(idx+2, day_of_year-ldom[idx]);
+    }
   } //namespace date_time2
 } //namespace boost
 #endif

@@ -15,6 +15,7 @@
 #include "test_nanotime.hpp"
 #include "test_date_algo.hpp"
 #include "test_durations.hpp"
+#include "test_constexpr.hpp"
 
 #include <iostream>
 #include "testfrmwk.hpp"
@@ -31,6 +32,7 @@ int main()
   test_nanotime();
   test_date_algo();
   test_durations();
+  test_const_expr();
 
   TestStats::instance().print();
   return TestStats::instance().failcount();

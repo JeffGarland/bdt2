@@ -4,6 +4,7 @@
 #include "boost/date_time/v2/date_algo.hpp"
 #include "testfrmwk.hpp"
 
+// see also test_const_expr
 
 void test_month_from_year_and_day() {
   using namespace boost::date_time2;
@@ -31,14 +32,6 @@ void test_month_from_year_and_day() {
   check("algo:month_from_year_and_day - 2002-321 == 11 (nov 17)", 
 	month_from_year_and_day(2002, 321) == 11);
   
-
-  //force constexpr compilation
-  {
-    constexpr int i = month_from_year_and_day(2002, 321);
-    check("algo:month_from_year_and_day - constexpr - 2002-321 == 11", 
-	  i == 11);
-  }
-  
 }
 
 
@@ -58,15 +51,6 @@ void test_leap_year() {
   check("algo:is_leap_year -5000 is NOT a leap year", !is_leap_year(5000));
   check("algo:is_leap_year -2014 is NOT a leap year", !is_leap_year(2014));
 
-  //force constexpr compilation
-  {
-    constexpr bool b = is_leap_year(1404);
-    check("algo:is_leap_year - constexpr -1404 is a leap year", b == true);
-  }
-  {
-    constexpr bool b = is_leap_year(2014);
-    check("algo:is_leap_year - constexpr -2014 is NOT a leap year", b == false);
-  }
 }
 
 
@@ -102,29 +86,106 @@ void test_end_of_month_day() {
   check("algo:end_of_month_day - 31 days in month Dec 2000", 
 	end_of_month_day(2000,12) == 31);
 
-  //force constexpr compilation
-  {
-    constexpr int i = end_of_month_day(1999, 2);
-    check("algo:end_of_month_day - constexpr - 28 days in month Feb 1999", 
-	  i == 28);
-
-  }
-  {
-    constexpr int i = end_of_month_day(2000, 2);
-    check("algo:end_of_month_day - constexpr - 29 days in month Feb 2000", 
-	  i == 29);
-  }
 }
 
 
 
-void test_from_ymd() {
+void  test_month_and_day_from_year_doy() {
+
   using namespace boost::date_time2;
+  using std::cout; 
+  using std::endl; 
   
-  // check("month_from_year_and_day - 2014-Jan-1 == 1", 
-  // 	month_from_year_and_day(2014, 1) == 1);
-  
-  
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 1);
+    check("algo:month_and_day_from_year_doy - 2014/1 ", 
+	  mnt_day == std::pair<int,int>(1,1));
+  }
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 31);
+    check("algo:month_and_day_from_year_doy - 2014/31 ", 
+	  mnt_day == std::pair<int,int>(1,31));
+  }
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 32);
+    check("algo:month_and_day_from_year_doy - 2014/32 - 2/1", 
+	  mnt_day == std::pair<int,int>(2,1));
+  }
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 33);
+    check("algo:month_and_day_from_year_doy - 2014/33 - 2/2", 
+	  mnt_day == std::pair<int,int>(2,2));
+  }
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 59);
+    cout << "algo: 2014/59 - " 
+	 << mnt_day.first 
+	 << "/" << mnt_day.second
+	 << endl;
+    check("algo:month_and_day_from_year_doy - 2014/59 - 2/28 ", 
+	  mnt_day == std::pair<int,int>(2,28));
+  }
+
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 60);
+    cout << "algo: 2014/60 - " 
+	 << mnt_day.first 
+	 << "/" << mnt_day.second
+	 << endl;
+    check("algo:month_and_day_from_year_doy - 2014/60 - 3/1 ", 
+	  mnt_day == std::pair<int,int>(3,1));
+  }
+
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 243);
+    cout << "algo: 2014/243 - " 
+	 << mnt_day.first 
+	 << "/" << mnt_day.second
+	 << endl;
+    check("algo:month_and_day_from_year_doy - 2014/243 - 8/31 ", 
+	  mnt_day == std::pair<int,int>(8,31));
+  }
+
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 244);
+    cout << "algo: 2014/244 - " 
+	 << mnt_day.first 
+	 << "/" << mnt_day.second
+	 << endl;
+    check("algo:month_and_day_from_year_doy - 2014/244 - 9/1 ", 
+	  mnt_day == std::pair<int,int>(9,1));
+  }
+
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 335);
+    cout << "algo: 2014/335 - " 
+	 << mnt_day.first 
+	 << "/" << mnt_day.second
+	 << endl;
+    check("algo:month_and_day_from_year_doy - 2014/335 - 12/1 ", 
+	  mnt_day == std::pair<int,int>(12,1));
+  }
+
+  {
+    auto mnt_day = month_and_day_from_year_doy(2014, 365);
+    cout << "algo: 2014/365 - " 
+	 << mnt_day.first 
+	 << "/" << mnt_day.second
+	 << endl;
+    check("algo:month_and_day_from_year_doy - 2014/335 - 12/31 ", 
+	  mnt_day == std::pair<int,int>(12,31));
+  }
+
+  //todo -- write leap year tests
+  //todo -- write a test loop that test every single day of year
+  //in 2014
+  { 
+    //if you run this you get good results
+    for (int i=1; i<=365; i++) {
+      auto mnt_day = month_and_day_from_year_doy(2014, i);
+      cout << "algo md: " << mnt_day.first << "/" << mnt_day.second << endl;
+    }
+  }
 }
 
 
@@ -133,7 +194,7 @@ void test_date_algo()
   test_leap_year();
   test_end_of_month_day();
   test_month_from_year_and_day();
-  test_from_ymd();
+  test_month_and_day_from_year_doy();
 }
 
 
