@@ -242,11 +242,22 @@ namespace boost {
       bool operator<=(const date& rhs) const { return d_ <= rhs.d_; }
 
       ///todo -- needs to a template on duration type...
-      date operator-(const days& rhs) const;
-      date operator+(const days& rhs) const;
-      date operator-(const weeks& rhs) const;
-      date operator+(const weeks& rhs) const;
-      days operator-(const date& rhs) const;
+      template<typename DurationType>
+      date operator+(const DurationType& rhs) const
+      {
+	//hook to allow for logical durations that need to
+	//recognize the date they are adding to 
+	return rhs.add_to(*this);
+      }
+      date  operator- (const days& rhs) const;
+      date  operator+ (const days& rhs) const;
+      date& operator-=(const days& rhs);
+      date& operator+=(const days& rhs);
+      date  operator- (const weeks& rhs) const;
+      date  operator+ (const weeks& rhs) const;
+      date& operator-=(const weeks& rhs);
+      date& operator+=(const weeks& rhs);
+      days  operator- (const date& rhs) const;
 
       /// increment / decrement operators
       date& operator--() { d_ = d_ - boost::gregorian::days(1); return *this; }
@@ -363,7 +374,7 @@ namespace boost {
     
     ///Specialization for construction from std::tuple
     template<>
-    date::date<std::tuple<int,int,int>>(const std::tuple<int,int,int>& ymd, checking check)
+    date::date(const std::tuple<int,int,int>& ymd, checking check)
     {
       from_ymd(year_month_day(ymd), check); 
     }
@@ -380,7 +391,7 @@ namespace boost {
 
     /// Template specialization to construct a date from a chrono::system_clock::time_point
     template<>
-    date::date<std::chrono::system_clock::time_point>(const std::chrono::system_clock::time_point& tp) noexcept
+    date::date(const std::chrono::system_clock::time_point& tp) noexcept
     {
       std::time_t tt = std::chrono::system_clock::to_time_t(tp);
       from_time_t(tt);
@@ -388,7 +399,7 @@ namespace boost {
 
     /// Specialization to allow construction from a iso_week_number representation Sunday of 51st week 2014 
     template<>
-    date::date<iso_week_number>(const iso_week_number& wn, checking check)
+    date::date(const iso_week_number& wn, checking check)
     {
       //todo fix me..
     }
@@ -396,7 +407,7 @@ namespace boost {
 
     /// Specialization to construct from a day of week spec eg: First Tue in Jan 2014
     template<>
-    date::date<day_of_week>(const day_of_week& dow) noexcept
+    date::date(const day_of_week& dow) noexcept
     {
       year_month_day ymd(dow.to<year_month_day>());
       from_ymd(ymd); 
@@ -406,7 +417,7 @@ namespace boost {
     //so that standard template constructor in date could work...would compile,
     /// Specialization to construct from closest day of week spec eg: First Tue in Jan 2014
     template<>
-    date::date<closest_day_of_week>(const closest_day_of_week& cdw) noexcept
+    date::date(const closest_day_of_week& cdw) noexcept
     {
 
       year_month_day ymd(cdw.to<year_month_day>());
@@ -415,7 +426,7 @@ namespace boost {
     
     /// Specialization to support day of year construction 
     template<>
-    date::date<day_of_year>(const day_of_year& doy) noexcept
+    date::date(const day_of_year& doy) noexcept
     {
       from_ymd(year_month_day(doy.to<year_month_day>())); 
     }
@@ -473,6 +484,14 @@ namespace boost {
       return date(d_ - boost::gregorian::weeks(rhs.count())); 
     }
 
+    inline
+    date&
+    date::operator-=(const weeks& rhs)
+    {
+      d_ -= boost::gregorian::weeks(rhs.count()); 
+      return *this;
+    }
+
     /// Arithmetic addition operation with weeks duration type
     inline
     date 
@@ -481,9 +500,16 @@ namespace boost {
       return date(d_ + boost::gregorian::weeks(rhs.count())); 
     }
 
-    //todo rm - prior to chrono...
-    //      days operator-(const date& rhs) const { return d_ - rhs.d_; }
+    inline
+    date&
+    date::operator+=(const weeks& rhs)
+    {
+      d_ += boost::gregorian::weeks(rhs.count()); 
+      return *this;
+    }
 
+    /// Subtract two dates and return a day count
+    inline
     days 
     date::operator-(const date& rhs) const 
     { 
@@ -497,13 +523,31 @@ namespace boost {
     { 
       return date(d_ - boost::gregorian::days(rhs.count())); 
     }
-    
+
+    /// Subtract days to from a date
+    inline
+    date& 
+    date::operator-=(const days& rhs)
+    {
+      d_ -= boost::gregorian::days(rhs.count());
+      return *this;
+    }
+
     /// Arithmetic addition operation with days duration type
     inline
     date 
     date::operator+(const days& rhs) const 
     { 
       return date(d_ + boost::gregorian::days(rhs.count())); 
+    }
+
+    /// Add days to a date
+    inline
+    date&
+    date::operator+=(const days& rhs)
+    {
+      d_ += boost::gregorian::days(rhs.count());
+      return *this;
     }
 
     /// Calculate the date of next given weekday eg: next Thu
