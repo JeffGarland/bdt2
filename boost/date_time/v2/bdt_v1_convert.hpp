@@ -15,7 +15,7 @@ namespace boost {
 
     ///Specialization to allow conversions from boost date time v1 gregorian::date
     template<>
-    date::date<boost::gregorian::date>(const boost::gregorian::date& bd, checking check)
+    date::date(const boost::gregorian::date& bd, checking check)
     {
       d_ = bd;
     }
@@ -32,7 +32,7 @@ namespace boost {
 
     ///Specialization to allow conversions from boost date_time  v1 posix_time::ptime
     template<>
-    date::date<boost::posix_time::ptime>(const boost::posix_time::ptime& t) noexcept
+    date::date(const boost::posix_time::ptime& t) noexcept
     {
       d_ = t.date(); //todo fix the check -- what to do with nadt values from v1?
     }
