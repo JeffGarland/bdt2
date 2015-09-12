@@ -31,7 +31,8 @@ namespace boost { namespace date_time2 {
 
     //Specialization to allow conversions from yesterday 
     template<>
-    date::date<yesterday>(const yesterday& yd, checking check)
+    date::date(const yesterday& yd, checking check)
+//    date::date<yesterday>(const yesterday& yd, checking check)
     {
       //never check this as it's always good
       d_ = yd.d_; //-- hack impl that will break...
@@ -223,6 +224,11 @@ void test_date()
     check("date: test addition of days", d1 + days(1) == d2); 
     check("date: test subtraction of days", d2 - days(1) == d1); 
    
+    d1 += days(1);
+    check("date: test += days", d2 == d1);
+
+    d2 -= days(1);
+    check("date: test -= days", d2 == (d1-days(1)));
   }
   //Test addition and subtraction of weeks
   {
@@ -230,8 +236,10 @@ void test_date()
     date d2(2013, Jan, 8);
     check("date: test addition of weeks", d1 + weeks(3) == d1 + days(21)); 
     check("date: test addition of weeks", d1 + weeks(1) == d2); 
-    check("date: test subtraction of weeks", d2 - weeks(1) == d1); 
-   
+    check("date: test subtraction of weeks", d2 - weeks(1) == d1);
+
+    //compile error as expected!
+    //weeks w = d2 - d1;
   }
 
   //Test addition mixed mode durations
@@ -242,7 +250,12 @@ void test_date()
 	  d1 + weeks(2) + days(7) == d1 + days(21)); 
     check("date: test addition of weeks", 
 	  d1 + weeks(2) - days(7) == d2); 
-    //    check("date: test subtraction of weeks", d2 - weeks(1) == d1); 
+
+    d1 += weeks(1);
+    check("date: test += weeks", d2 == d1);
+
+    d2 -= weeks(1);
+    check("date: test -= weeks", d2 == (d1-weeks(1)));
    
   }
   //check operator-- and operator++
