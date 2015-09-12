@@ -27,6 +27,14 @@ void test_day_of_week() {
     year_month_day ymd(dow.to<year_month_day>());
     check("day of week: First Sunday in Feb 2002",  year_month_day(2002,Feb,3) == ymd);
   }
+
+
+  {
+    day_of_week dow{First, Sun, Feb, 2002};
+    year_month_day ymd(dow);
+    check("day of week: First Sunday in Feb 2002",  year_month_day(2002,Feb,3) == ymd);
+  }
+
   {
     date memorial(day_of_week(Last, Mon, May, 2013)); 
     check("day of week: memorial day 2013 Last Mon in May",  date(2013,May,27) == memorial);
