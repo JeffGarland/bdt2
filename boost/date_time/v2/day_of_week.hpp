@@ -86,6 +86,12 @@ namespace boost {
     //   return this->to<year_month_day>();
     // }
 
+    ///Specialization to construct year_month_day from a day_of_week 
+    template<>
+    year_month_day::year_month_day(const day_of_week& dow)
+    {
+        *this = dow.to<year_month_day>();
+    } 
 
   } //namespace date_time2
 } //namespace boost
